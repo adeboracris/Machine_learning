@@ -1,14 +1,13 @@
 clear; close all; clc;
 
 %% preparing dataset
-
 load fisheriris
 
-species_num = grp2idx(species);
-%%
+species_num = grp2idx(species); %creates an index vector of 1 or 2 take into account the species 
+%% data organizing 
 % binary classification...
 X = randn(100,10);
-X(:,[1,3,5,7]) = meas(1:100,:); % 1, 3, 5, 7  feature가 분류에 유용한 feature일 것임.
+X(:,[1,3,5,7]) = meas(1:100,:); % 1, 3, 5, 7  .
 y = species_num(1:100);
 
 rand_num = randperm(size(X,1));
@@ -33,14 +32,14 @@ X_train_w_best_feature = X_train(:,fs);
 
 Md1 = fitcsvm(X_train_w_best_feature,y_train,'KernelFunction','rbf','OptimizeHyperparameters','auto',...
       'HyperparameterOptimizationOptions',struct('AcquisitionFunctionName',...
-      'expected-improvement-plus','ShowPlots',true)); % Bayes' Optimization 사용.
+      'expected-improvement-plus','ShowPlots',true)); % Bayes' Optimization.
 
 
 %% Final test with test set
 X_test_w_best_feature = X_test(:,fs);
 test_accuracy_for_iter = sum((predict(Md1,X_test_w_best_feature) == y_test))/length(y_test)*100
 
-%% hyperplane 확인
+%% hyperplane 
 
 figure;
 hgscatter = gscatter(X_train_w_best_feature(:,1),X_train_w_best_feature(:,2),y_train);
@@ -48,7 +47,7 @@ hold on;
 h_sv=plot(Md1.SupportVectors(:,1),Md1.SupportVectors(:,2),'ko','markersize',8);
 
 
-% test set의 data를 하나 하나씩 넣어보자.
+% test set data.
 
 gscatter(X_test_w_best_feature(:,1),X_test_w_best_feature(:,2),y_test,'rb','xx')
 
